@@ -159,6 +159,20 @@ details{margin-top:10px;border-top:1px solid var(--bd);padding-top:10px}summary{
 .gd-nx{display:flex;gap:12px;align-items:center;width:100%;background:var(--c1);border:1px solid var(--bd);border-radius:16px;padding:8px;text-align:left}.gd-nx span{display:block;font-size:12px}.gd-nx b{font-size:14px}
 .gd-in.end{justify-content:center;gap:10px}.gd-big{font-size:80px}
 @keyframes gdp{50%{transform:scale(1.08)}}
+.mpc .seg{display:flex;background:var(--c2);border-radius:999px;padding:3px}.mpc .seg button{border:0;background:none;color:var(--mut);font:inherit;font-size:12px;font-weight:700;padding:6px 10px;border-radius:999px}.mpc .seg button.on{background:#d4fc3c;color:#0b0d10}
+.tgt{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.tgt span{background:var(--c2);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700}
+.pm{border:1px solid var(--bd);border-radius:16px;padding:10px 12px;margin-top:8px;background:rgba(255,255,255,.02)}.pm.dn{border-color:rgba(16,217,138,.35);background:rgba(16,217,138,.05)}
+.pmh{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:4px}.pmh small{color:var(--mut);font-weight:600}
+.pmi{display:flex;justify-content:space-between;gap:8px;font-size:14px;margin:2px 0}.pmi span{font-weight:600}.pmi small{color:var(--mut);text-align:right;flex:none;max-width:45%}
+.pma{display:flex;gap:6px;margin-top:8px}.pma .chip{flex:none}.pma .btn.sm{flex:1}.pmd{color:#10d98a;font-size:13px;font-weight:700;margin-top:6px}
+.tg{display:inline-block;font-size:10px;font-weight:800;background:rgba(212,252,60,.15);color:#d4fc3c;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle}.tg.o{background:rgba(255,179,64,.15);color:#ffb340}
+.why2{background:rgba(90,184,255,.08);border:1px solid rgba(90,184,255,.22);border-radius:12px;padding:8px 10px;font-size:13px;margin:6px 0}
+.pill{background:var(--c2);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700}
+.nxo{display:flex;gap:10px;align-items:center;border-top:1px solid var(--bd);padding:10px 0}.nxo b{font-size:14px}.nxb{display:flex;gap:6px}.nxb .chip{padding:6px 10px}
+.mgh.tap{cursor:pointer}.mgh em{font-style:normal;font-size:12px;opacity:.7}
+.mck{border:1px solid rgba(255,179,64,.3);background:rgba(255,179,64,.06);border-radius:14px;padding:10px 12px;margin:6px 0 10px}.mck.ok{border-color:rgba(16,217,138,.3);background:rgba(16,217,138,.06)}.mct{font-size:14px;margin:4px 0 8px;font-weight:600}
+.mcr{display:grid;grid-template-columns:44px 1fr 74px;gap:8px;align-items:center;font-size:12px;margin:3px 0}.mcr .wbar{margin:0}.mcr b{text-align:right}.mcr small{color:var(--mut);font-weight:500}
+.card.csm{padding:14px}.card.csm h2{font-size:15px}.card.csm .nbs{gap:8px}
 </style></head><body>
 <div id="setup" style="display:none"></div>
 <main>
@@ -993,7 +1007,7 @@ function dayPick(){const ds=[];for(let i=6;i>=0;i--){const d=new Date();d.setDat
 function fsCard(){const day=FDAY,isT=day===today(),F=D.food[day]||[],g=gaps(day),s=g.s||daySum(day),t=g.t||ntT(day),vi=L()=='vi';
  const groups={};F.forEach((f,i)=>{const m=MEALS.includes(f.m)?f.m:'x';(groups[m]=groups[m]||[]).push([f,i])});
  const item=([f,i])=>{const n=fNut(f);return `<div class="fsi" onclick="editF(${i})">${f.img?`<img class="fth" src="${f.img}" alt="">`:''}<div style="flex:1;min-width:0"><b>${f.ai?'✨ ':''}${esc(fName(f))}</b><div class="mut mac">${f.g?`${f.g}g · `:''}<span>${N(n.k)} kcal</span> · <span class="mp">${N(n.p)}g ${Vi('đạm','P')}</span> · <span>${n.est?'≈':''}${N(n.c)}g carb</span> · <span>${n.est?'≈':''}${N(n.f)}g ${Vi('béo','F')}</span>${n.fib!=null?` · ${N(n.fib,1)}g ${Vi('xơ','fib')}`:''}</div></div><button class="x" onclick="event.stopPropagation();delFD(${i})" aria-label="delete">${ic('x',16)}</button></div>`};
- const list=F.length?[...MEALS,'x'].filter(m=>groups[m]).map(m=>{const gk=groups[m].reduce((a,[f])=>a+(+f.k||0),0);return `<div class="mgh"><span>${MIC[m]} ${MLN[L()][m]}</span><small>${N(gk)} kcal</small></div>${groups[m].map(item).join('')}`}).join(''):`<div class="empty" style="padding:10px">🍽️ ${isT?Vi('Hôm nay chưa ghi món nào.','Nothing logged today.'):Vi('Ngày này chưa có món nào.','Nothing logged that day.')}</div>`;
+ const list=F.length?[...MEALS,'x'].filter(m=>groups[m]).map(m=>{const gk=groups[m].reduce((a,[f])=>a+(+f.k||0),0);return `<div class="mgh"><span>${MIC[m]} ${MLN[L()][m]}</span><small>${N(gk)} kcal</small></div>${groups[m].map(item).join('')}${typeof mealCheck=='function'&&MC===m&&m!='x'?mealCheck(day,m):''}`}).join(''):`<div class="empty" style="padding:10px">🍽️ ${isT?Vi('Hôm nay chưa ghi món nào.','Nothing logged today.'):Vi('Ngày này chưa có món nào.','Nothing logged that day.')}</div>`;
  const gh=g.G.map(x=>`<div class="gp ${x.lv}"><span>${x.e}</span><div style="flex:1"><div>${x.tx}</div>${isT&&x.k?`<div class="sgs">${sugFor(x.k,x.need,g.left).map(sugRow).join('')}</div>`:''}</div></div>`).join('');
  const ai=!isT?'':FSAI&&FSAI.busy?`<div class="mut" style="margin-top:10px">✨ ${Vi('AI đang nghĩ món cho bạn…','AI is thinking…')}</div>`:FSAI&&FSAI.items?`<div class="lbl">✨ ${Vi('AI gợi ý','AI picks')}<small class="mut">${esc(FSAI.m||'')}</small></div><div class="sgs">${FSAI.items.map((x,i)=>`<button class="sg" onclick="fsAddAI(${i})"><span>${esc(x.n)}</span><small>${N(x.k)} kcal · ${N(x.p)}g ${Vi('đạm','pro')} · ${N(x.c)}g carb · ${esc(x.why)}</small><i>＋</i></button>`).join('')}</div>`:FSAI&&FSAI.err?`<div class="mut" style="margin-top:10px">😕 ${S4('e')[FSAI.err]||S4('e').gen}</div>`:'';
  return `${dayPick()}${!isT?`<div class="note" style="margin:0 0 14px">🗓️ ${Vi(`Đang xem ${FD(day)}. Món bạn thêm bây giờ sẽ ghi vào ngày này.`,`Viewing ${FD(day)}. Anything you add now goes to this day.`)} <a href="#" onclick="event.preventDefault();FDAY=today();renderFood()" style="color:#10d98a;font-weight:700">${Vi('Về hôm nay','Back to today')}</a></div>`:''}
@@ -1022,7 +1036,7 @@ const _rs2=renderSet;renderSet=function(){_rs2();const c=[...$('#t-set').querySe
 const FBCFG={apiKey:"AIzaSyAX3nKBmtCW3nqlmSJ7A1Ax9wcdAKS1UWI",authDomain:"gym-coach-e5a55.firebaseapp.com",projectId:"gym-coach-e5a55",storageBucket:"gym-coach-e5a55.firebasestorage.app",messagingSenderId:"156912300523",appId:"1:156912300523:web:511b0bcd5ce3b4589b69ae"};
 const FBV='12.4.0',FBU=m=>`https://www.gstatic.com/firebasejs/${FBV}/firebase-${m}.js`;
 /* --- pure sync helpers (unit-tested) --- */
-const U_WHOLE=['s','rem','nt','wkSeen','fpair'],U_MAPS=['food','checks','logs','wdone','water','act'],U_ARR=['weights','meas'],U_LS={lsfav:'gymcoach_fav',lscorr:'gymcoach_corr'};
+const U_WHOLE=['s','rem','nt','wkSeen','fpair'],U_MAPS=['food','checks','logs','wdone','water','act','plan'],U_ARR=['weights','meas'],U_LS={lsfav:'gymcoach_fav',lscorr:'gymcoach_corr'};
 const H=s=>{let h=5381;for(let i=0;i<s.length;i++)h=(h*33^s.charCodeAt(i))>>>0;return h.toString(36)+s.length};
 function toUnits(d,ls){const u={};for(const k of U_WHOLE)if(d[k]!=null)u[k]=JSON.stringify(d[k]);
  for(const m of U_MAPS)for(const[k,v]of Object.entries(d[m]||{}))u[m+'~'+k]=JSON.stringify(v);
@@ -1253,6 +1267,163 @@ function gdDraw(){const el=$('#gd');if(!GD)return;const l=L(),a=GD.a,x=a[GD.i],t
  <div class="gd-c">${x.man&&GD.ph!=='prep'?`<small>${S('tapNext')}</small>`:`<b>${GD.left}</b><small>${lab}</small>`}</div></div>
  <div class="gd-ctl"><button onclick="gdPrev()" aria-label="${S('back')}">⏮</button><button class="pp" onclick="gdToggle()">${GD.run?'⏸ '+S('pause'):'▶ '+S('resume')}</button><button onclick="gdNext()" aria-label="${S('skip')}">${x.man&&GD.ph!=='prep'?S('next')+' ⏭':'⏭'}</button></div>
  ${nx?`<div class="gd-nx">${mvImg(nx.img,'thm')}<div><span class="mut">${S('next')}</span><b>${esc(nx.n)}</b></div></div>`:''}</div>`}
+
+// ---- v15: meal plan, per-meal check, next-meal suggestion
+D.plan=D.plan||{};
+// dishes: [vi, en, slots, kcal, p, c, f, fib, portion vi, portion en, us?]
+const DSH=[
+['Phở bò tái','Beef pho (rare beef)','bl',450,28,55,12,2,'1 tô vừa','1 medium bowl'],
+['Phở gà','Chicken pho','bld',420,30,52,9,2,'1 tô vừa','1 medium bowl'],
+['Bún bò Huế','Bun bo Hue','bl',520,28,60,17,3,'1 tô vừa','1 medium bowl'],
+['Bánh mì trứng ốp la','Fried-egg banh mi','b',420,18,48,17,2,'1 ổ, 2 trứng','1 roll, 2 eggs'],
+['Bánh mì gà xé','Shredded chicken banh mi','bl',400,25,50,10,2,'1 ổ','1 roll'],
+['Xôi gà','Sticky rice with chicken','b',480,22,70,12,2,'1 gói nhỏ','1 small pack'],
+['Cháo gà','Chicken rice porridge','bd',330,22,45,6,1,'1 tô','1 bowl'],
+['Bánh cuốn chả lụa','Steamed rice rolls with pork roll','b',400,16,60,10,2,'1 đĩa','1 plate'],
+['Yến mạch sữa + chuối','Oatmeal with milk + banana','b',380,15,62,8,7,'60g yến mạch, 200ml sữa','60g oats, 200ml milk'],
+['Hủ tiếu Nam Vang','Hu tieu noodle soup','bl',480,26,62,12,2,'1 tô','1 bowl'],
+['Bún riêu cua','Crab noodle soup','bl',450,22,55,14,3,'1 tô','1 bowl'],
+['Sữa chua Hy Lạp + granola + dâu','Greek yogurt parfait with berries','b',350,22,45,9,5,'200g sữa chua','200g yogurt',1],
+['Trứng bác + bánh mì nguyên cám','Scrambled eggs + whole-wheat toast','b',420,25,30,20,4,'3 trứng, 2 lát','3 eggs, 2 slices',1],
+['Yến mạch protein','Protein oatmeal','b',400,32,50,8,7,'60g yến mạch + 1 muỗng whey','60g oats + 1 scoop whey',1],
+['Cơm gà luộc + rau','Boiled chicken rice + greens','ld',560,38,70,12,3,'1 đĩa','1 plate'],
+['Cơm tấm sườn nướng','Broken rice with grilled pork chop','l',650,32,75,22,2,'1 đĩa','1 plate'],
+['Cơm ức gà áp chảo + rau luộc','Seared chicken breast, rice + greens','ld',520,42,62,10,5,'1 chén cơm, 150g gà','1 bowl rice, 150g chicken'],
+['Cơm cá kho tộ + canh rau','Caramelized fish, rice + veg soup','ld',560,32,68,16,4,'1 phần','1 serving'],
+['Cơm thịt kho trứng','Braised pork & egg with rice','ld',680,30,72,28,2,'1 phần','1 serving'],
+['Cơm bò xào rau','Beef stir-fry with veg & rice','ld',580,32,68,18,4,'1 đĩa','1 plate'],
+['Cơm cá thu sốt cà + canh','Mackerel in tomato sauce, rice + soup','ld',560,34,64,16,4,'1 phần','1 serving'],
+['Cơm đậu hũ sốt cà + rau','Tofu in tomato sauce, rice + greens','ld',480,20,68,14,6,'1 phần','1 serving'],
+['Cơm tôm rim + canh bí','Braised shrimp, rice + squash soup','ld',520,32,66,12,3,'1 phần','1 serving'],
+['Bún chả Hà Nội','Bun cha (grilled pork & noodles)','l',600,30,70,20,3,'1 phần','1 serving'],
+['Bún thịt nướng','Grilled pork vermicelli bowl','ld',560,28,70,16,4,'1 tô','1 bowl'],
+['Gỏi cuốn tôm thịt','Fresh spring rolls (shrimp & pork)','lsd',320,20,44,6,3,'4 cuốn','4 rolls'],
+['Canh chua cá + cơm','Sour fish soup with rice','ld',520,30,70,10,4,'1 phần','1 serving'],
+['Gà nướng + salad + khoai lang','Grilled chicken, salad + sweet potato','d',480,38,45,14,7,'150g gà, 1 củ khoai','150g chicken, 1 sweet potato'],
+['Cá hồi áp chảo + cơm gạo lứt + rau','Salmon, brown rice + greens','ld',600,36,55,24,6,'120g cá, 1 chén cơm','120g fish, 1 bowl rice'],
+['Salad ức gà dầu giấm','Chicken breast salad, vinaigrette','ld',380,38,18,16,6,'1 tô lớn','1 large bowl'],
+['Bò lúc lắc + salad + ít cơm','Shaking beef, salad + a little rice','d',560,36,50,22,4,'1 phần','1 serving'],
+['Cá basa hấp gừng + cơm + rau','Ginger-steamed fish, rice + greens','ld',470,32,60,9,4,'1 phần','1 serving'],
+['Đậu hũ non + trứng hấp + rau + cơm','Silken tofu, steamed egg, greens + rice','d',460,24,58,14,5,'1 phần','1 serving'],
+['Mì xào bò','Stir-fried noodles with beef','ld',620,28,70,24,3,'1 đĩa','1 plate'],
+['Burrito bowl gà nướng','Grilled chicken burrito bowl','ld',620,40,70,18,10,'1 tô','1 bowl',1],
+['Sandwich gà tây + salad','Turkey sandwich + side salad','l',450,32,45,14,6,'1 cái','1 sandwich',1],
+['Cá hồi + quinoa + bông cải','Salmon, quinoa & broccoli','d',580,38,48,22,7,'1 phần','1 plate',1],
+['Chili bò nạc','Lean beef chili','d',450,35,40,14,10,'1 tô','1 bowl',1],
+['Sữa chua không đường + chuối','Plain yogurt + banana','s',200,8,34,3,3,'1 hũ + 1 quả','1 cup + 1 banana'],
+['2 trứng luộc + dưa leo','2 boiled eggs + cucumber','s',160,13,3,10,1,'2 quả','2 eggs'],
+['Sữa đậu nành không đường + chuối','Unsweetened soy milk + banana','s',210,8,32,5,3,'1 hộp + 1 quả','1 carton + 1 banana'],
+['Khoai lang luộc + sữa chua','Boiled sweet potato + yogurt','s',260,9,48,3,5,'1 củ + 1 hũ','1 potato + 1 cup'],
+['Bánh mì đen + bơ đậu phộng','Whole-grain toast + peanut butter','s',250,10,26,12,4,'1 lát + 1 muỗng','1 slice + 1 tbsp',1],
+['Whey + chuối','Whey shake + banana','s',230,26,30,2,3,'1 muỗng + 1 quả','1 scoop + 1 banana',1],
+['Hạt hỗn hợp + táo','Mixed nuts + apple','s',270,6,25,15,6,'30g + 1 quả','30g + 1 apple'],
+['Sữa chua Hy Lạp + việt quất','Greek yogurt + berries','s',170,17,20,2,3,'170g','170g',1],
+['Bắp luộc + sữa tươi không đường','Boiled corn + unsweetened milk','s',260,11,40,6,3,'1 trái + 1 hộp','1 cob + 1 carton']];
+// sides / quick fixes: [vi, en, kcal, p, c, f, fib, tag]
+const SDS=[['Trứng luộc','Boiled egg',72,6,.5,5,0,'p'],['Ức gà luộc (100g)','Boiled chicken breast (100g)',165,31,0,3.6,0,'p'],['Sữa chua Hy Lạp (100g)','Greek yogurt (100g)',60,10,4,.4,0,'p'],['Đậu hũ (100g)','Tofu (100g)',80,8,2,4.5,1,'p'],['Sữa đậu nành không đường','Unsweetened soy milk',80,7,4,4,1,'p'],['Rau luộc (1 đĩa)','Boiled greens (1 plate)',40,3,7,.3,4,'fib'],['Trái cây (1 chén ổi/thanh long)','Fruit (1 cup guava/dragon fruit)',70,1.5,15,.5,4,'fib'],['Thêm nửa chén cơm','Extra half bowl of rice',100,2,22,.2,.3,'c'],['Khoai lang luộc (1 củ nhỏ)','Small boiled sweet potato',110,2,25,.2,4,'c'],['Bơ (nửa quả)','Avocado (half)',120,1.5,6,11,5,'f'],['Đậu phộng rang (15g)','Roasted peanuts (15g)',85,4,2,7,1.3,'f']];
+const MSPLIT={tr:{b:.25,l:.35,s:.15,d:.25},rs:{b:.25,l:.35,s:.10,d:.30}};
+const NK=['k','p','c','f','fib'];
+const rng=s=>()=>((s=Math.imul(s^s>>>15,1|s)+0x6D2B79F5|0,((s^s>>>7)>>>0)%1e6)/1e6);
+const dishIt=(i,q=1)=>{const x=DSH[i];return{d:i,n:{vi:x[0],en:x[1]},por:{vi:(q!==1?`×${q} · `:'')+x[8],en:(q!==1?`×${q} · `:'')+x[9]},k:x[3]*q,p:x[4]*q,c:x[5]*q,f:x[6]*q,fib:x[7]*q}};
+const sideIt=(i,q=1)=>{const x=SDS[i];return{sd:i,n:{vi:(q>1?q+' × ':'')+x[0],en:(q>1?q+' × ':'')+x[1]},por:{vi:'',en:''},k:x[2]*q,p:x[3]*q,c:x[4]*q,f:x[5]*q,fib:x[6]*q}};
+const sumIt=a=>{const s={k:0,p:0,c:0,f:0,fib:0};a.forEach(x=>NK.forEach(k=>s[k]+=+x[k]||0));return s};
+function isTrain(day){const p=D.plan[day];if(p&&p.tr!=null)return p.tr;if(D.wdone[day])return true;if(Object.keys(D.logs||{}).some(k=>k.startsWith(day+'|')))return true;const wd=new Date(day+'T00:00').getDay();return D.s.days>=5?wd>=1&&wd<=5:[1,2,4,5].includes(wd)}
+function dayT(day){const t=ntT(day),tr=isTrain(day),dc=Math.round(t.c*.1);return{k:t.kcal,p:t.p,c:tr?t.c+dc:t.c-dc,f:Math.max(20,tr?t.f-dc*4/9:t.f+dc*4/9),fib:t.fib,tr}}
+function slotBase(day,m){const T=dayT(day),sp=MSPLIT[T.tr?'tr':'rs'][m],o={};NK.forEach(k=>o[k]=T[k]*sp);return o}
+function mealErr(s,T){const r=(a,b)=>b>0?(a-b)/b:0,pu=Math.max(0,T.p-s.p)/(T.p||1),po=Math.max(0,s.p-T.p)/(T.p||1),fu=Math.max(0,T.fib-s.fib)/(T.fib||1);
+ return 4*r(s.k,T.k)**2+5*pu*pu+.3*po*po+1.1*((s.c-T.c)/Math.max(T.c,30))**2+.8*((s.f-T.f)/Math.max(T.f,12))**2+.6*fu*fu}
+function bestFor(m,T,opt={}){const ex=opt.ex||[],out=[],Q=m==='s'?[1,1.5]:[.75,1,1.25,1.5],SC=[[]];
+ SDS.forEach((_,i)=>{SC.push([[i,1]]);if(i<5)SC.push([[i,2]])});for(let i=0;i<SDS.length;i++)for(let j=i+1;j<SDS.length;j++)SC.push([[i,1],[j,1]]);
+ DSH.forEach((x,i)=>{if(!x[2].includes(m)||ex.includes(i))return;let best=null;
+  for(const q of Q)for(const sc of SC){if(m==='s'&&sc.length>1)continue;const it=[dishIt(i,q),...sc.map(([a,b])=>sideIt(a,b))],s=sumIt(it),e=mealErr(s,T)+.012*sc.length+(q!==1?.008:0)+(x[10]?.03:0);if(!best||e<best.e)best={e,it,s,i}}
+  out.push(best)});return out.sort((a,b)=>a.e-b.e)}
+function pickFor(m,T,seed,ex){const L0=bestFor(m,T,{ex}),top=L0.slice(0,6),R=rng(seed);const w=top.map((o,j)=>Math.exp(-(o.e-top[0].e)*6)/(1+j*.25)),sw=w.reduce((a,b)=>a+b,0);let r=R()*sw;for(let j=0;j<top.length;j++){r-=w[j];if(r<=0)return top[j]}return top[0]}
+function mealLogged(day,m){return (D.food[day]||[]).filter(f=>(MEALS.includes(f.m)?f.m:'x')===m)}
+const doneS=(day,m)=>mealLogged(day,m).length>0;
+const actS=(day,m)=>{const s={k:0,p:0,c:0,f:0,fib:0};mealLogged(day,m).forEach(f=>{const n=fNut(f);NK.forEach(k=>s[k]+=+n[k]||0)});return s};
+// remaining targets for not-yet-eaten slots, given what's been eaten
+function remT(day){const T=dayT(day),sp=MSPLIT[T.tr?'tr':'rs'],rem={},eaten={k:0,p:0,c:0,f:0,fib:0},open=MEALS.filter(m=>!doneS(day,m));
+ (D.food[day]||[]).forEach(f=>{if(!MEALS.includes(f.m)||doneS(day,f.m)){const n=fNut(f);NK.forEach(k=>eaten[k]+=+n[k]||0)}});
+ const P=D.plan[day],lockK={k:0,p:0,c:0,f:0,fib:0};let sh=0;open.forEach(m=>{if(P&&P.M&&P.M[m]&&P.M[m].lock){const s=sumIt(P.M[m].items);NK.forEach(k=>lockK[k]+=s[k])}else sh+=sp[m]});
+ open.forEach(m=>{if(P&&P.M&&P.M[m]&&P.M[m].lock){rem[m]=sumIt(P.M[m].items);return}const o={},b=slotBase(day,m);NK.forEach(k=>{let v=(T[k]-eaten[k]-lockK[k])*sp[m]/(sh||1);const fl=k==='p'?b.p*.95:k==='k'?(m==='s'?80:Math.max(250,b.k*.55)):k==='fib'?b.fib*.6:b[k]*.35;o[k]=Math.max(fl,Math.min(v,b[k]*(k==='p'?1.7:1.5)))});rem[m]=o});
+ return{T,eaten,rem,open}}
+function genPlan(day,keep){const P=D.plan[day]=D.plan[day]||{M:{}};P.M=P.M||{};P.seed=(P.seed||Math.floor(Math.random()*1e6))+7;const used=[];
+ MEALS.forEach(m=>{const x=P.M[m];if(x&&(x.lock||x.eaten||doneS(day,m)||(keep&&keep!==m)))x.items.forEach(i=>i.d!=null&&used.push(i.d))});
+ MEALS.forEach(m=>{const x=P.M[m];if(x&&(x.lock||x.eaten||doneS(day,m)||(keep&&keep!==m)))return;const R=remT(day),T=R.rem[m]||slotBase(day,m),o=pickFor(m,T,P.seed+m.charCodeAt(0)*31,used);if(!o)return;o.it.forEach(i=>i.d!=null&&used.push(i.d));P.M[m]={items:o.it,lock:0,eaten:0,ai:0};
+  if(!keep)Object.assign(P.M[m],{});});P.eh=ehash(day);P.rp=null;save()}
+function ehash(day){return MEALS.map(m=>{const s=actS(day,m);return doneS(day,m)?m+Math.round(s.k/25)+'.'+Math.round(s.p/4):''}).join('|')}
+function autoReplan(day){const P=D.plan[day];if(!P||!P.M)return;const h=ehash(day);if(P.eh===h)return;P.eh=h;const R=remT(day),ch=[];
+ R.open.forEach(m=>{const x=P.M[m];if(!x||x.lock||x.eaten)return;const s=sumIt(x.items),T=R.rem[m];if(Math.abs(s.k-T.k)>Math.max(80,T.k*.15)||T.p-s.p>10){const used=MEALS.filter(z=>z!==m&&P.M[z]).flatMap(z=>P.M[z].items.map(i=>i.d)).filter(v=>v!=null);const o=pickFor(m,T,P.seed+m.charCodeAt(0)*31+h.length,used);if(o){P.M[m]={items:o.it,lock:0,eaten:0,ai:0,rp:1};ch.push(m)}}});
+ if(ch.length){const over=MEALS.filter(m=>doneS(day,m)).map(m=>[m,actS(day,m).k-slotBase(day,m).k]).sort((a,b)=>Math.abs(b[1])-Math.abs(a[1]))[0];P.rp={ch,by:over&&over[0],d:over?Math.round(over[1]):0}}save()}
+const iName=i=>i.n?i.n[L()]||i.n.vi:'';
+function mpLog(day,m,items,src){items.forEach(i=>{(D.food[day]=D.food[day]||[]).push({n:iName(i),n2:{vi:i.n.vi,en:i.n.en||i.n.vi},k:Math.round(i.k),p:Math.round(i.p),c:Math.round(i.c),f:Math.round(i.f),fib:Math.round(i.fib*10)/10,m,pl:src||1})});MC=m;buzz([10,40,20])}
+function mpEat(m){const P=D.plan[FDAY];if(!P||!P.M[m])return;mpLog(FDAY,m,P.M[m].items);P.M[m].eaten=1;P.eh=null;save();toast(Vi('✅ Đã ghi ','✅ Logged ')+MLN[L()][m].toLowerCase());renderAll()}
+function mpSwap(m){const P=D.plan[FDAY];if(!P)return;P.seed=(P.seed||1)+13;const cur=P.M[m]&&P.M[m].items[0].d;const used=MEALS.flatMap(z=>P.M[z]?P.M[z].items.map(i=>i.d):[]).filter(v=>v!=null);const R=remT(FDAY),T=R.rem[m]||slotBase(FDAY,m),o=pickFor(m,T,P.seed,used.concat(cur!=null?[cur]:[]));if(o)P.M[m]={items:o.it,lock:0,eaten:0,ai:0};buzz(8);save();renderFood()}
+function mpLock(m){const x=D.plan[FDAY].M[m];x.lock=!x.lock;buzz(8);save();renderFood()}
+function mpRegen(){genPlan(FDAY);buzz(10);renderFood()}
+function mpTr(v){const P=D.plan[FDAY]=D.plan[FDAY]||{M:{}};P.tr=v;genPlan(FDAY);renderFood()}
+let MPAI=null;
+async function mpAI(){const day=FDAY,R=remT(day),vi=L()=='vi',P=D.plan[day];MPAI={busy:1};renderFood();
+ const slots=R.open.filter(m=>!(P.M[m]&&P.M[m].lock));
+ try{const tg=slots.map(m=>{const t=R.rem[m];return `${m}: ${N(t.k)} kcal, ${N(t.p)}g protein, ${N(t.c)}g carbs, ${N(t.f)}g fat, ${N(t.fib)}g fiber`}).join('; ');
+  const o=await geminiJSON([{text:`Create a one-day meal plan for a beginner gym-goer in Vietnam losing fat (${R.T.tr?'training day':'rest day'}). Meals to plan with per-meal targets: ${tg}. (b=breakfast, l=lunch, s=snack, d=dinner). Use mostly common Vietnamese dishes (some simple US options OK), realistic portions, easy to buy or cook. Each meal: 1-3 items, each with name, portion, kcal, protein_g, carbs_g, fat_g, fiber_g. Hit each meal's targets within ~10%. Language: ${vi?'natural Vietnamese':'English'}.`}],{type:'OBJECT',properties:{meals:{type:'ARRAY',items:{type:'OBJECT',properties:{slot:{type:'STRING',enum:['b','l','s','d']},items:{type:'ARRAY',items:{type:'OBJECT',properties:{name:{type:'STRING'},portion:{type:'STRING'},kcal:{type:'NUMBER'},protein_g:{type:'NUMBER'},carbs_g:{type:'NUMBER'},fat_g:{type:'NUMBER'},fiber_g:{type:'NUMBER'}},required:['name','portion','kcal','protein_g','carbs_g','fat_g','fiber_g']}}},required:['slot','items']}}},required:['meals']},fetch,0.7,'gemini-3.1-flash-lite');
+  let n=0;(o.meals||[]).forEach(x=>{if(!slots.includes(x.slot)||!x.items||!x.items.length)return;P.M[x.slot]={items:x.items.slice(0,3).map(i=>({n:{vi:String(i.name).slice(0,60),en:String(i.name).slice(0,60)},por:{vi:String(i.portion||'').slice(0,40),en:String(i.portion||'').slice(0,40)},k:+i.kcal||0,p:+i.protein_g||0,c:+i.carbs_g||0,f:+i.fat_g||0,fib:+i.fiber_g||0})),lock:0,eaten:0,ai:1};n++});
+  P.eh=ehash(day);save();MPAI=n?null:{err:'gen'}}catch(e){MPAI={err:e.code||'gen'}}renderFood()}
+// per-meal check
+let MC=null;
+function mcOpen(m){MC=MC===m?null:m;buzz(6);renderFood()}
+function mealCheck(day,m){const s=actS(day,m),P=D.plan[day],b=slotBase(day,m),T=b,vi=L()=='vi',nm=MLN[L()][m],msg=[],fx=[];
+ const dp=T.p-s.p,dk=s.k-T.k,rc=T.c?s.c/T.c:1,rf=T.f?s.f/T.f:1;
+ if(dp>8){msg.push(Vi(`thiếu ~${N(dp)}g đạm`,`~${N(dp)}g short on protein`));fx.push('p')}
+ if(rc>1.25)msg.push(Vi('hơi nhiều carb','a bit carb-heavy'));else if(rc<.6&&dk<-80){msg.push(Vi(`thiếu ~${N(T.c-s.c)}g carb`,`~${N(T.c-s.c)}g short on carbs`));fx.push('c')}
+ if(rf>1.4)msg.push(Vi('hơi nhiều béo','a bit high in fat'));
+ if(s.fib<T.fib*.5){msg.push(Vi('ít rau/xơ','low on veg/fiber'));fx.push('fib')}
+ if(dk>Math.max(120,T.k*.2))msg.unshift(Vi(`lố ~${N(dk)} kcal`,`~${N(dk)} kcal over`));else if(dk<-Math.max(150,T.k*.3))msg.unshift(Vi(`còn thiếu ~${N(-dk)} kcal`,`~${N(-dk)} kcal under`));
+ const room=Math.max(60,T.k-s.k+60),fixes=[];fx.forEach(tag=>{const c=SDS.map((x,i)=>[x,i]).filter(([x])=>x[7]===tag&&x[2]<=room).sort((a,b)=>tag==='p'?b[0][3]/b[0][2]-a[0][3]/a[0][2]:a[0][2]-b[0][2]);if(c[0]&&fixes.length<2&&!fixes.includes(c[0][1]))fixes.push(c[0][1])});
+ const ok=!msg.length,txt=ok?Vi(`${nm} ổn rồi, đúng mục tiêu 👍`,`${nm} is right on target 👍`):`${nm} ${msg.join(', ')}.`;
+ const row=(l,v,t,u)=>`<div class="mcr"><span>${l}</span><div class="wbar"><i style="width:${Math.min(100,t?v/t*100:0)}%;background:${v>t*1.2?'#ff5d73':v>=t*.85?'#10d98a':'#ffb340'}"></i></div><b>${N(v)}<small>/${N(t)}${u}</small></b></div>`;
+ return `<div class="mck ${ok?'ok':''}"><div class="row" style="justify-content:space-between;align-items:center"><b>🔍 ${Vi('Bữa này','This meal')}</b><button class="x" onclick="MC=null;renderFood()" aria-label="close">${ic('x',14)}</button></div><div class="mct">${txt}</div>
+ ${row('🔥',s.k,T.k,'')}${row(Vi('Đạm','P'),s.p,T.p,'g')}${row('Carb',s.c,T.c,'g')}${row(Vi('Béo','F'),s.f,T.f,'g')}${row(Vi('Xơ','Fib'),s.fib,T.fib,'g')}
+ ${fixes.length?`<div class="mut" style="margin:8px 0 4px;font-size:12px">${Vi('Thêm ngay cho đủ:','Quick fix, add now:')}</div><div class="sgs">${fixes.map(i=>{const x=SDS[i];return `<button class="sg" onclick="mcAdd('${m}',${i})"><span>＋ ${esc(Vi(x[0],x[1]))}</span><small>${x[2]} kcal · ${x[3]}g ${Vi('đạm','pro')} · ${x[4]}g carb</small><i>＋</i></button>`}).join('')}</div>`:''}</div>`}
+function mcAdd(m,i){mpLog(FDAY,m,[sideIt(i)],2);save();toast(Vi('✅ Đã thêm ','✅ Added ')+esc(Vi(SDS[i][0],SDS[i][1])));renderAll()}
+// next meal
+function nextSlot(day){if(day!==today())return null;const h=new Date().getHours(),cur=mealNow(),ci=h>=21?4:MEALS.indexOf(cur);for(let j=Math.max(0,ci);j<4;j++){const m=MEALS[j];if(!doneS(day,m))return m}return null}
+function nxOpts(day,m){const R=remT(day),T=R.rem[m],P=D.plan[day],out=[];if(P&&P.M&&P.M[m])out.push({it:P.M[m].items,s:sumIt(P.M[m].items),pl:1});
+ const used=P&&P.M?MEALS.flatMap(z=>P.M[z]?P.M[z].items.map(i=>i.d):[]).filter(v=>v!=null):[];const b=bestFor(m,T,{ex:used});const seen=new Set(out.map(o=>o.it[0].d));for(const o of b){if(out.length>=3)break;if(seen.has(o.i))continue;seen.add(o.i);out.push({it:o.it,s:o.s})}return{T,R,out}}
+let NXO=null;
+function nxCard(day){const m=nextSlot(day);if(!m)return '';const {T,R,out}=nxOpts(day,m);NXO={m,out};const vi=L()=='vi',nm=MLN[L()][m];
+ const dn=MEALS.filter(z=>doneS(day,z));let why='';if(dn.length){const last=dn[dn.length-1],d=actS(day,last).k-slotBase(day,last).k,pd=slotBase(day,last).p-actS(day,last).p;
+  if(d>120)why=Vi(`${MLN.vi[last]} lố ~${N(d)} kcal → ${nm.toLowerCase()} nhẹ hơn, ưu tiên đạm.`,`${MLN.en[last]} ran ~${N(d)} kcal over → lighter, higher-protein ${nm.toLowerCase()}.`);
+  else if(pd>10)why=Vi(`${MLN.vi[last]} thiếu ~${N(pd)}g đạm → bù vào ${nm.toLowerCase()}.`,`${MLN.en[last]} was ~${N(pd)}g short on protein → make it up at ${nm.toLowerCase()}.`);
+  else if(d<-150)why=Vi(`${MLN.vi[last]} ăn hơi ít → ${nm.toLowerCase()} có thể ăn đủ no.`,`${MLN.en[last]} was light → you can eat a full ${nm.toLowerCase()}.`)}
+ return `<div class="card nxc"><div class="xh"><h2>⏭️ ${Vi('Bữa tiếp theo nên ăn gì','What to eat next')}</h2><span class="pill">${MIC[m]} ${nm}</span></div>
+ <div class="tgt"><span>🎯 ${N(T.k)} kcal</span><span>${N(T.p)}g ${Vi('đạm','P')}</span><span>${N(T.c)}g carb</span><span>${N(T.f)}g ${Vi('béo','F')}</span></div>${why?`<div class="why2">💡 ${why}</div>`:''}
+ ${out.map((o,j)=>`<div class="nxo"><div style="flex:1;min-width:0"><b>${o.pl?`<span class="tg">${Vi('Thực đơn','Plan')}</span> `:''}${esc(iName(o.it[0]))}${o.it.length>1?` <span class="mut">+ ${o.it.slice(1).map(iName).map(esc).join(', ')}</span>`:''}</b><div class="mut mac">${esc(o.it[0].por?o.it[0].por[L()]:'')} · ${N(o.s.k)} kcal · <span class="mp">${N(o.s.p)}g ${Vi('đạm','P')}</span> · ${N(o.s.c)}g carb · ${N(o.s.f)}g ${Vi('béo','F')}</div></div><div class="nxb"><button class="btn sm" onclick="nxAdd(${j})" aria-label="add">＋</button>${o.pl?'':`<button class="chip" onclick="nxUse(${j})">📌</button>`}</div></div>`).join('')}
+ <div class="mut" style="font-size:12px;margin-top:6px">＋ ${Vi('ghi luôn vào','log now as')} ${nm.toLowerCase()} · 📌 ${Vi('dùng làm thực đơn','use as plan')}</div></div>`}
+function nxAdd(j){const o=NXO.out[j];mpLog(FDAY,NXO.m,o.it);const P=D.plan[FDAY];if(P&&P.M&&o.pl&&P.M[NXO.m])P.M[NXO.m].eaten=1;save();toast(Vi('✅ Đã ghi ','✅ Logged ')+esc(iName(o.it[0])));renderAll()}
+function nxUse(j){const o=NXO.out[j],P=D.plan[FDAY]=D.plan[FDAY]||{M:{}};P.M[NXO.m]={items:o.it,lock:1,eaten:0,ai:0};P.eh=null;save();toast(Vi('📌 Đã đặt vào thực đơn','📌 Set as plan'));renderFood()}
+// plan card
+function planCard(day){const isT=day===today();if(!D.plan[day]||!D.plan[day].M||!MEALS.some(m=>D.plan[day].M[m])){if(day<today())return '';genPlan(day)}autoReplan(day);const P=D.plan[day],T=dayT(day),vi=L()=='vi';
+ const tot=sumIt(MEALS.flatMap(m=>P.M[m]?P.M[m].items:[]));const sp=MSPLIT[T.tr?'tr':'rs'];
+ const meal=m=>{const x=P.M[m];if(!x)return '';const s=sumIt(x.items),dn=doneS(day,m),a=dn?actS(day,m):null;return `<div class="pm ${dn?'dn':''}"><div class="pmh"><span>${MIC[m]} <b>${MLN[L()][m]}</b> <small>${Math.round(sp[m]*100)}%</small>${x.rp?`<span class="tg o">${Vi('đã chỉnh','adjusted')}</span>`:''}${x.ai?'<span class="tg">✨ AI</span>':''}</span><span class="mut">${N(s.k)} kcal</span></div>
+  ${dn?(D.food[day]||[]).filter(f=>f.m===m).map((f,j)=>`<div class="pmi"><span>${j?'＋ ':''}${esc(f.n2?(f.n2[L()]||f.n):f.n)}</span><small>${N(f.k)} kcal</small></div>`).join('')+`<div class="mut" style="font-size:11px;margin-top:2px">${Vi('Kế hoạch','Planned')}: ${x.items.map(i=>esc(iName(i))).join(' + ')} · ${N(s.k)} kcal</div>`:x.items.map((i,j)=>`<div class="pmi"><span>${j?'＋ ':''}${esc(iName(i))}</span><small>${esc(i.por?i.por[L()]:'')}</small></div>`).join('')}
+  ${dn?'':`<div class="mut mac">${N(s.p)}g ${Vi('đạm','P')} · ${N(s.c)}g carb · ${N(s.f)}g ${Vi('béo','F')} · ${N(s.fib)}g ${Vi('xơ','fib')}</div>`}
+  ${dn?`<div class="pmd">✓ ${Vi('Đã ăn','Eaten')} · ${N(a.k)} kcal · ${N(a.p)}g ${Vi('đạm','P')}</div>`:isT||day>today()?`<div class="pma"><button class="btn sm" onclick="mpEat('${m}')">✓ ${Vi('Đã ăn','Ate it')}</button><button class="chip" onclick="mpSwap('${m}')" ${x.lock?'disabled':''}>🔄 ${Vi('Đổi món','Swap')}</button><button class="chip ${x.lock?'on':''}" onclick="mpLock('${m}')">${x.lock?'🔒':'🔓'}</button></div>`:''}</div>`};
+ const rp=P.rp&&P.rp.ch&&P.rp.ch.length?`<div class="why2">🔄 ${Vi(`${MLN.vi[P.rp.by]||'Bữa trước'} ${P.rp.d>0?'lố '+N(P.rp.d)+' kcal':'lệch so với thực đơn'}, đã điều chỉnh ${P.rp.ch.map(m=>MLN.vi[m].toLowerCase()).join(', ')} cho cân bằng.`,`${MLN.en[P.rp.by]||'An earlier meal'} ${P.rp.d>0?'went '+N(P.rp.d)+' kcal over':'was off plan'}; adjusted ${P.rp.ch.map(m=>MLN.en[m].toLowerCase()).join(', ')} to rebalance.`)}</div>`:'';
+ const ai=MPAI&&MPAI.busy?`<div class="mut" style="margin-top:8px">✨ ${Vi('AI đang lên thực đơn…','AI is planning…')}</div>`:MPAI&&MPAI.err?`<div class="mut" style="margin-top:8px">😕 ${S4('e')[MPAI.err]||S4('e').gen}</div>`:'';
+ return `<div class="card mpc"><div class="xh"><h2>🍱 ${isT?Vi('Thực đơn hôm nay','Today\'s meal plan'):Vi('Thực đơn','Meal plan')}</h2><div class="seg"><button class="${T.tr?'on':''}" onclick="mpTr(true)">🏋️ ${Vi('Ngày tập','Training')}</button><button class="${T.tr?'':'on'}" onclick="mpTr(false)">😌 ${Vi('Nghỉ','Rest')}</button></div></div>
+ <div class="tgt"><span>${N(tot.k)}/${N(T.k)} kcal</span><span>${N(tot.p)}/${N(T.p)}g ${Vi('đạm','P')}</span><span>${N(tot.c)}/${N(T.c)}g carb</span><span>${N(tot.f)}/${N(T.f)}g ${Vi('béo','F')}</span><span>${N(tot.fib)}/${N(T.fib)}g ${Vi('xơ','fib')}</span></div>${rp}
+ ${MEALS.map(meal).join('')}
+ ${isT||day>today()?`<div class="row" style="gap:8px;margin-top:10px"><button class="chip" style="flex:1" onclick="mpRegen()">🎲 ${Vi('Tạo lại','Regenerate')}</button><button class="chip" style="flex:1" onclick="${GS().key?'mpAI()':"goTab('set')"}">✨ ${GS().key?Vi('AI lên thực đơn','AI plan'):Vi('Thêm key để dùng AI','Add key for AI')}</button></div>`:''}${ai}
+ <div class="mut" style="font-size:12px;margin-top:8px">${T.tr?Vi('Ngày tập: thêm carb quanh buổi tập, bớt béo.','Training day: more carbs around training, less fat.'):Vi('Ngày nghỉ: bớt carb, thêm chút béo tốt.','Rest day: fewer carbs, a little more healthy fat.')} 🔒 ${Vi('= giữ món khi tạo lại.','= keep when regenerating.')}</div></div>`}
+// hook into fsCard
+const _fsc=fsCard;fsCard=function(){let h=_fsc();const day=FDAY;
+ h=h.replace(/<div class="mgh"><span>(.*?)<\/span><small>/g,(a,b)=>a);
+ MEALS.forEach(m=>{const lab=`<div class="mgh"><span>${MIC[m]} ${MLN[L()][m]}</span>`;const i=h.indexOf(lab);if(i<0)return;h=h.replace(lab,`<div class="mgh tap" onclick="mcOpen('${m}')"><span>${MIC[m]} ${MLN[L()][m]} <em>${MC===m?'▾':'🔍'}</em></span>`);
+});
+ const a='<div class="card"><div class="xh"><h2>📋';const k=h.indexOf(a);if(k>=0)h=h.slice(0,k)+planCard(day)+nxCard(day)+h.slice(k);
+ h=h.replace('<div class="card"><h2>📊 ','<div class="card csm"><h2>📊 ');h=h.replace('<div class="card"><div class="xh"><h2>🧩','<div class="card csm"><div class="xh"><h2>🧩');return h};
+const _pf2=pushF;pushF=function(o){if(!o.m)o.m=FDAY===today()?mealNow():'s';MC=o.m;_pf2(o)};
 
 boot();if(/^#r=/.test(location.hash))openShared(location.hash.slice(3));addEventListener('hashchange',()=>{if(/^#r=/.test(location.hash))openShared(location.hash.slice(3))});if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 if(/^#ex=/.test(location.hash)&&D.s.name){const[a,b]=location.hash.slice(4).split('.');wDay=+a;renderWork();openEx(+b)}
