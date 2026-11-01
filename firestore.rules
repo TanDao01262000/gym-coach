@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function pairDoc(pid) { return get(/databases/$(database)/documents/pairs/$(pid)); }
+    function isPairMember(pid) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/pairs/$(pid))
+        && request.auth.uid in pairDoc(pid).data.members;
+    }
+
+    // Each user owns everything under users/{uid}
+    match /users/{uid}/{document=**} {
+      allow read, write: if signedIn() && request.auth.uid == uid;
+    }
+
+    // A partner may read only the public summary, and only if both are in the pair it names
+    match /users/{uid}/public/{doc} {
+      allow read: if signedIn()
+        && resource.data.pair is string
+        && pairDoc(resource.data.pair).data.members.hasAll([uid, request.auth.uid]);
+    }
+
+    match /pairs/{pid} {
+      allow read, delete: if signedIn() && request.auth.uid in resource.data.members;
+      // create: only yourself as the single member
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['members', 'created'])
+        && request.resource.data.members == [request.auth.uid];
+      // update: join an open pair as the 2nd member, or leave a pair you are in
+      allow update: if signedIn()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members'])
+        && (
+          (resource.data.members.size() == 1
+            && resource.data.members[0] != request.auth.uid
+            && request.resource.data.members == [resource.data.members[0], request.auth.uid])
+          ||
+          (request.auth.uid in resource.data.members
+            && !(request.auth.uid in request.resource.data.members)
+            && request.resource.data.members.size() == resource.data.members.size() - 1
+            && resource.data.members.hasAll(request.resource.data.members))
+        );
+
+      match /nudges/{nid} {
+        allow read, delete: if isPairMember(pid);
+        allow create: if isPairMember(pid)
+          && request.resource.data.keys().hasOnly(['from', 'm', 'at'])
+          && request.resource.data.from == request.auth.uid
+          && request.resource.data.m is string && request.resource.data.m.size() <= 20
+          && request.resource.data.at is number;
+      }
+    }
+  }
+}

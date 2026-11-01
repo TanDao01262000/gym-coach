@@ -132,6 +132,9 @@ details{margin-top:10px;border-top:1px solid var(--bd);padding-top:10px}summary{
 .nbs{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}.nbl{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;gap:4px}.nbl span{font-weight:600;white-space:nowrap}.nbl small{color:var(--mut);font-weight:500;font-size:10px}.nbl b{font-size:13px;white-space:nowrap}
 .gp{display:flex;gap:10px;padding:11px 0;border-top:1px solid var(--bd);font-size:14px;line-height:1.4}.gp:first-of-type{border-top:0}.gp>span{font-size:18px}.gp.ok{color:#8fe3b9}.gp.warn>div>div:first-child{color:#ffd08a}.gp.bad>div>div:first-child{color:#ff8a9a}.gp.gap>div>div:first-child{font-weight:700}
 .sgs{display:flex;flex-direction:column;gap:6px;margin-top:8px}.sg{display:grid;grid-template-columns:1fr auto;text-align:left;border:1px solid var(--bd);background:var(--c2);color:var(--tx);border-radius:14px;padding:9px 12px;gap:0 10px}.sg span{font-weight:700;font-size:14px}.sg small{grid-column:1;color:var(--mut);font-size:12px}.sg i{grid-row:1/3;grid-column:2;align-self:center;font-style:normal;width:30px;height:30px;border-radius:10px;background:var(--grad);color:#08110a;display:grid;place-items:center;font-weight:900}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:16px;padding:14px;font-weight:700;font-size:15px;background:#fff;color:#1f1f1f;box-shadow:0 6px 20px rgba(0,0,0,.25)}.gbtn:disabled{opacity:.6}
+.av{width:46px;height:46px;border-radius:50%;object-fit:cover;background:var(--grad);color:#08110a;display:grid;place-items:center;font-weight:800;font-size:20px;flex:0 0 auto}
+.sst{margin-top:14px;padding:10px 12px;border-radius:14px;background:var(--c2);font-size:13px}
 </style></head><body>
 <div id="setup" style="display:none"></div>
 <main>
@@ -878,7 +881,7 @@ const pKey=p=>crypto.subtle.importKey('raw',ub64(p.k),'AES-GCM',false,['encrypt'
 async function pEnc(p,o){const iv=crypto.getRandomValues(new Uint8Array(12)),c=await crypto.subtle.encrypt({name:'AES-GCM',iv},await pKey(p),new TextEncoder().encode(JSON.stringify(o)));return b64u(iv)+'.'+b64u(new Uint8Array(c))}
 async function pDec(p,s){const[a,b]=String(s).split('.');return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:ub64(a)},await pKey(p),ub64(b))))}
 function pairCreate(){setPair({t:'gc'+b64u(crypto.getRandomValues(new Uint8Array(12))).replace(/[-_]/g,'x'),k:b64u(crypto.getRandomValues(new Uint8Array(16))),pn:null});pSend('s');pLive();renderSet()}
-const pairLink=p=>location.href.split('#')[0].split('?')[0]+'#pair='+p.t+'.'+p.k;
+let pairLink=p=>location.href.split('#')[0].split('?')[0]+'#pair='+p.t+'.'+p.k;
 async function pairShare(){const p=pair(),u=pairLink(p),tx=Vi(`Kết nối Gym Coach với mình nhé! Mở link này để xem tiến độ của nhau và cổ vũ nhau: ${u}`,`Pair with me on Gym Coach so we can see each other's progress: ${u}`);
  if(navigator.share)try{await navigator.share({title:'Gym Coach',text:tx});return}catch(e){if(e.name==='AbortError')return}try{await navigator.clipboard.writeText(u);toast(Vi('📋 Đã sao chép link, gửi qua Zalo/Messenger nhé','📋 Link copied. Send it via Zalo/Messenger'))}catch(e){prompt('Link',u)}}
 function pairJoin(s){const[t,k]=s.split('.');if(!/^gc[A-Za-z0-9]{10,}$/.test(t)||!k)return;history.replaceState(null,'',location.pathname);const o=pair();if(o&&o.t===t)return;
@@ -904,7 +907,7 @@ function partnerHome(){const p=pair();if(!p)return'';const s=p.ps,nm=esc(p.pn||V
  <div class="pgrid"><div><b>${N(s.w,1)}</b><small>kg · ${lost>0?'↓'+N(lost,1):'—'}</small></div><div><b>${s.wk}/${s.pl}</b><small>${Vi('buổi tập','workouts')}</small></div><div><b>🔥 ${s.stk}</b><small>${Vi('chuỗi','streak')}</small></div></div>
  ${today_?`<div class="pbar"><span>${Vi('Calo','Calories')}</span><div class="wbar"><i style="width:${Math.min(100,s.kc/s.kt*100)}%"></i></div><small>${N(s.kc)}/${N(s.kt)}</small></div><div class="pbar"><span>${Vi('Nước','Water')}</span><div class="wbar"><i style="width:${Math.min(100,s.wat/s.wg*100)}%;background:var(--pro)"></i></div><small>${N(s.wat/1000,1)}L</small></div>`:`<div class="mut" style="font-size:13px">${Vi('Hôm nay chưa cập nhật.','No update yet today.')}</div>`}${nb}</div>`}
 function pairCard(){const p=pair();
- return `<div class="card"><h2>🤝 ${Vi('Bạn đồng hành','Partner')}</h2>${!p?`<p class="mut" style="margin:0">${Vi('Kết nối với vợ/chồng hoặc bạn tập để xem tiến độ của nhau theo thời gian thực và gửi lời cổ vũ. Không cần tài khoản.','Pair with your spouse or gym buddy to see each other\'s progress live and send nudges. No account needed.')}</p><button class="btn" onclick="pairCreate();pairShare()">🔗 ${Vi('Tạo link kết nối','Create pairing link')}</button>`:
+ return `<div class="card"><h2>🤝 ${Vi('Bạn đồng hành','Partner')}</h2>${!p?`<p class="mut" style="margin:0">${Vi('Kết nối với vợ/chồng hoặc bạn tập để xem tiến độ của nhau theo thời gian thực và gửi lời cổ vũ. Không cần tài khoản.','Pair with your spouse or gym buddy to see each other\'s progress live and send nudges. No account needed.')}</p><button class="btn" onclick="Promise.resolve(pairCreate()).then(()=>pair()&&pairShare())">🔗 ${Vi('Tạo link kết nối','Create pairing link')}</button>`:
  `<div class="fi"><span>${p.pn?Vi('Đã kết nối với ','Paired with ')+'<b>'+esc(p.pn)+'</b>':Vi('Đang chờ người kia mở link','Waiting for your partner to open the link')}</span></div><div class="duo" style="margin-top:12px"><button class="btn" onclick="pairShare()">📤 ${Vi('Gửi lại link','Share link')}</button><button class="btn g" onclick="pairOff()">${Vi('Ngắt kết nối','Unpair')}</button></div>`}
  <button class="btn g" style="margin-top:12px" onclick="shareProg()">📣 ${Vi('Chia sẻ tiến độ qua Zalo…','Share progress…')}</button>
  <div class="mut" style="font-size:12px;margin-top:10px">🔒 ${Vi('Chỉ gửi bản tóm tắt (cân nặng, buổi tập, calo, nước), mã hoá đầu-cuối bằng khoá trong link, qua máy chủ miễn phí ntfy.sh. Ảnh và nhật ký chi tiết không bao giờ rời máy. Ai có link mới xem được, nên chỉ gửi cho người bạn tin.','Only a summary (weight, workouts, calories, water) is sent, end-to-end encrypted with the key in the link, via the free ntfy.sh relay. Photos and detailed logs never leave your phone. Anyone with the link can see it, so only share with someone you trust.')}</div></div>`}
@@ -990,6 +993,100 @@ function saveNT(){const o={};['p','c','f','fib','sug','na'].forEach(k=>{const v=
 const _pf=pushF;pushF=function(o){if(!o.m)o.m=FDAY===today()?mealNow():'s';if(o.q!=null&&QM[o.q]&&o.c==null){const m=QM[o.q];Object.assign(o,{c:m[0],f:m[1],fib:m[2],sug:m[3],na:m[4]})}(D.food[FDAY]=D.food[FDAY]||[]).push(o);save();buzz(10);renderAll()};
 const _rf=renderFood;renderFood=function(){_rf();const el=$('#t-food'),cards=el.querySelectorAll(':scope>.card');const last=cards[cards.length-1];last&&last.remove();const top=el.querySelector('.top');const first=el.querySelector(':scope>.card');first.insertAdjacentHTML('afterend',fsCard());if(top&&FDAY!==today())top.querySelector('.mut').textContent=FD(FDAY);animRings()};
 const _rs2=renderSet;renderSet=function(){_rs2();const c=[...$('#t-set').querySelectorAll('.card')];c[1]&&c[1].insertAdjacentHTML('afterend',ntCard())};
+
+/* ===== v13: Firebase cloud save + partner via Firestore ===== */
+const FBCFG={apiKey:"AIzaSyAX3nKBmtCW3nqlmSJ7A1Ax9wcdAKS1UWI",authDomain:"gym-coach-e5a55.firebaseapp.com",projectId:"gym-coach-e5a55",storageBucket:"gym-coach-e5a55.firebasestorage.app",messagingSenderId:"156912300523",appId:"1:156912300523:web:511b0bcd5ce3b4589b69ae"};
+const FBV='12.4.0',FBU=m=>`https://www.gstatic.com/firebasejs/${FBV}/firebase-${m}.js`;
+/* --- pure sync helpers (unit-tested) --- */
+const U_WHOLE=['s','rem','nt','wkSeen','fpair'],U_MAPS=['food','checks','logs','wdone','water','act'],U_ARR=['weights','meas'],U_LS={lsfav:'gymcoach_fav',lscorr:'gymcoach_corr'};
+const H=s=>{let h=5381;for(let i=0;i<s.length;i++)h=(h*33^s.charCodeAt(i))>>>0;return h.toString(36)+s.length};
+function toUnits(d,ls){const u={};for(const k of U_WHOLE)if(d[k]!=null)u[k]=JSON.stringify(d[k]);
+ for(const m of U_MAPS)for(const[k,v]of Object.entries(d[m]||{}))u[m+'~'+k]=JSON.stringify(v);
+ for(const a of U_ARR)for(const it of d[a]||[])if(it&&it.d)u[a+'~'+it.d]=JSON.stringify(it);
+ if(ls)for(const[id,key]of Object.entries(U_LS)){const v=ls.getItem(key);if(v!=null&&v!=='[]')u[id]=v}return u}
+function fromUnits(u,base,ls){const d=Object.assign({},base);U_MAPS.forEach(m=>d[m]={});U_ARR.forEach(a=>d[a]=[]);U_WHOLE.forEach(k=>{if(k!=='s')delete d[k]});
+ for(const[id,v]of Object.entries(u)){if(U_LS[id]){ls&&ls.setItem(U_LS[id],v);continue}const val=JSON.parse(v),i=id.indexOf('~');if(i<0){d[id]=id==='s'?Object.assign({},base.s,val):val;continue}
+  const k=id.slice(0,i),key=id.slice(i+1);if(U_MAPS.includes(k))d[k][key]=val;else if(U_ARR.includes(k))d[k].push(val)}
+ U_ARR.forEach(a=>d[a].sort((x,y)=>x.d<y.d?-1:1));if(!d.rem&&base.rem)d.rem=base.rem;d.nt=d.nt||{};d.wkSeen=d.wkSeen||{};return d}
+/* stamp local changes: meta M = {id:{u,h}|{u,del:1}}; boot=true gives new units ts 1 so the cloud wins conflicts on first sync */
+function stampUnits(units,M,now,boot){const ch=[];for(const[id,v]of Object.entries(units)){const m=M[id],h=H(v);if(!m||m.del||m.h!==h){M[id]={u:boot&&!m?1:now,h};ch.push(id)}}
+ for(const id of Object.keys(M))if(!(id in units)&&!M[id].del){M[id]={u:now,del:1};ch.push(id)}return ch}
+/* merge remote docs {id:{v,u,del}} into local units by updatedAt; returns new units + ids to push */
+function mergeUnits(units,M,remote,full){const out=Object.assign({},units),push=[];let changed=false;
+ for(const[id,r]of Object.entries(remote)){const m=M[id];if(!m||r.u>m.u||(r.u===m.u&&!r.del&&!m.del&&m.h!==H(r.v))){if(r.del){if(id in out){delete out[id];changed=true}M[id]={u:r.u,del:1}}else{if(out[id]!==r.v){out[id]=r.v;changed=true}M[id]={u:r.u,h:H(r.v)}}}else if(m.u>r.u)push.push(id)}
+ if(full)for(const id of Object.keys(M))if(!(id in remote)&&M[id].u>0)push.push(id);return{units:out,changed,push}}
+/* --- runtime --- */
+let FB=null,FBST={user:null,state:'off',last:+localStorage.getItem('gymcoach_synct')||0,err:null},SM=JSON.parse(localStorage.getItem('gymcoach_syncm')||'{}');
+const saveSM=()=>localStorage.setItem('gymcoach_syncm',JSON.stringify(SM));
+async function fbInit(){if(FB)return FB;const[a,au,fs]=await Promise.all([import(FBU('app')),import(FBU('auth')),import(FBU('firestore'))]);
+ const app=a.initializeApp(FBCFG),auth=au.getAuth(app);let db;try{db=fs.initializeFirestore(app,{localCache:fs.persistentLocalCache({tabManager:fs.persistentMultipleTabManager()})})}catch(e){db=fs.getFirestore(app)}
+ FB=Object.assign({app,auth,db},au,fs);FB.onAuthStateChanged(auth,u=>{FBST.user=u;if(u){localStorage.setItem('gymcoach_fbon','1');fbStart()}else fbStop();renderSetSafe()});
+ FB.getRedirectResult(auth).catch(e=>{FBST.err=e.code;renderSetSafe()});return FB}
+const renderSetSafe=()=>{try{if(D.s.name)renderSet()}catch(e){}};
+async function fbLogin(){FBST.state='busy';renderSetSafe();let F;try{F=await fbInit()}catch(e){FBST.state='off';toast(Vi('Không tải được Google Sign-In (mất mạng?)','Could not load Google Sign-In (offline?)'));renderSetSafe();return}
+ const p=new F.GoogleAuthProvider();p.setCustomParameters({prompt:'select_account'});
+ try{if(isIOS&&isSA)throw{code:'auth/operation-not-supported-in-this-environment'};await F.signInWithPopup(F.auth,p)}
+ catch(e){const c=e.code||'';if(/popup-blocked|not-supported|web-storage|internal-error/.test(c)){localStorage.setItem('gymcoach_fbon','1');await F.signInWithRedirect(F.auth,p);return}FBST.state='off';if(!/popup-closed|cancelled-popup/.test(c))toast(Vi('Đăng nhập lỗi: ','Sign-in failed: ')+esc(c||e.message))}renderSetSafe()}
+let FBUN=[],FBPT=null;
+function fbStart(){fbStop(true);const F=FB,uid=FBST.user.uid;FBST.state='sync';
+ FBUN.push(F.onSnapshot(F.collection(F.db,'users',uid,'u'),{includeMetadataChanges:false},snap=>{const rem={};let full=!FBST.gotFirst;
+  (full?snap.docs:snap.docChanges().map(c=>c.doc)).forEach(d=>{if(d.metadata.hasPendingWrites)return;const x=d.data();rem[d.id]={v:x.v,u:x.u||0,del:!!x.del}});
+  const bt=!Object.keys(SM).length,units=toUnits(D,localStorage);stampUnits(units,SM,Date.now(),bt||!D.s.name);
+  if(!D.s.name)for(const id of Object.keys(SM))SM[id].u=0;
+  const r=mergeUnits(units,SM,rem,full);FBST.gotFirst=1;saveSM();
+  if(r.changed){const was=!D.s.name;D=fromUnits(r.units,D,localStorage);_rawSave();if(was&&D.s.name){boot()}else renderAll();if(full)toast(Vi('☁️ Đã khôi phục dữ liệu từ đám mây','☁️ Data restored from the cloud'))}
+  fbPush(r.push);if(!r.push.length&&full){FBST.state='ok';FBST.last=Date.now();localStorage.setItem('gymcoach_synct',FBST.last);renderSetSafe()}},e=>{FBST.state='err';FBST.err=e.code;renderSetSafe()}));
+ fbPairListen();fbPub()}
+function fbStop(keep){FBUN.forEach(f=>{try{f()}catch(e){}});FBUN=[];FBST.gotFirst=0;if(!keep)FBST.state='off'}
+let _fbq=new Set(),_fbt=null;
+function fbPush(ids){ids.forEach(i=>_fbq.add(i));if(!_fbq.size)return;clearTimeout(_fbt);_fbt=setTimeout(fbFlush,1200)}
+async function fbFlush(){if(!FB||!FBST.user||!_fbq.size)return;const F=FB,uid=FBST.user.uid,ids=[..._fbq];_fbq.clear();const units=toUnits(D,localStorage);FBST.state='sync';renderSetSafe();
+ try{for(let i=0;i<ids.length;i+=400){const b=F.writeBatch(F.db);ids.slice(i,i+400).forEach(id=>{const m=SM[id]||{u:Date.now()},ref=F.doc(F.db,'users',uid,'u',id);b.set(ref,m.del||!(id in units)?{u:m.u,del:true}:{v:units[id],u:m.u})});await b.commit()}
+  FBST.state='ok';FBST.last=Date.now();localStorage.setItem('gymcoach_synct',FBST.last)}catch(e){FBST.state='err';FBST.err=e.code;ids.forEach(i=>_fbq.add(i))}renderSetSafe()}
+function fbSync(){if(!FBST.user)return;const units=toUnits(D,localStorage);fbPush(Object.keys(SM).filter(id=>id in units||SM[id].del));}
+/* partner via Firestore */
+function fbPairListen(){const F=FB,uid=FBST.user.uid,pid=D.fpair;if(!pid)return;
+ FBUN.push(F.onSnapshot(F.doc(F.db,'pairs',pid),s=>{if(!s.exists()){fbPairGone();return}const mem=s.data().members||[],o=mem.find(x=>x!==uid);const p=pair()||{};p.fb=pid;setPair(p);
+  if(o&&o!==FBPT){FBPT=o;FBUN.push(F.onSnapshot(F.doc(F.db,'users',o,'public','summary'),d=>{if(!d.exists())return;const x=d.data(),q=pair()||{fb:pid};q.ps=Object.assign({},x.s,{at:x.at});q.pn=x.s.n;setPair(q);if(tab==='home')renderHome()},()=>{}))}},e=>{if(e.code==='permission-denied')fbPairGone()}));
+ FBUN.push(F.onSnapshot(F.query(F.collection(F.db,'pairs',pid,'nudges'),F.where('at','>',Date.now()-12*36e5)),s=>s.docChanges().forEach(c=>{if(c.type!=='added')return;const x=c.doc.data();if(x.from===uid)return;pHandleN(c.doc.id,x.m,x.at)}),()=>{}))}
+function fbPairGone(){if(D.fpair){delete D.fpair;save()}const p=pair();if(p&&p.fb)setPair(null);FBPT=null;renderSetSafe()}
+let _fpt=null;function fbPub(){if(!FB||!FBST.user||!D.fpair||!D.s.name)return;clearTimeout(_fpt);_fpt=setTimeout(()=>FB.setDoc(FB.doc(FB.db,'users',FBST.user.uid,'public','summary'),{s:mySum(),at:Date.now(),pair:D.fpair}).catch(()=>{}),1500)}
+function pHandleN(id,m,at){const p=pair();if(!NUDGE[m])return;const seen=JSON.parse(localStorage.getItem('gymcoach_nseen')||'[]');if(seen.includes(id))return;seen.push(id);localStorage.setItem('gymcoach_nseen',JSON.stringify(seen.slice(-50)));if(Date.now()-at>12*36e5)return;
+ const nm=(p&&p.pn)||Vi('Bạn đồng hành','Partner'),N_=NUDGE[m];if(document.hidden)notify(N_[0]+' '+nm,Vi(N_[1],N_[2]),'nudge');else toast(`<b>${N_[0]} ${esc(nm)}</b><br>${Vi(N_[1],N_[2])}`,6000)}
+async function fbPairCreate(){const F=FB,uid=FBST.user.uid,pid='p'+b64u(crypto.getRandomValues(new Uint8Array(15))).replace(/[-_]/g,'x');
+ try{await F.setDoc(F.doc(F.db,'pairs',pid),{members:[uid],created:Date.now()});D.fpair=pid;save();setPair({fb:pid});fbStart();return pid}catch(e){toast(Vi('Không tạo được mã: ','Could not create code: ')+esc(e.code||''));return null}}
+async function fbPairJoin(pid){if(!/^p[A-Za-z0-9]{12,}$/.test(pid))return;if(D.fpair===pid)return;if(!FBST.user){localStorage.setItem('gymcoach_pjoin',pid);toast(Vi('Đăng nhập Google ở Cài đặt để kết nối với bạn đồng hành','Sign in with Google in Settings to pair'),6000);goTab('set');return}
+ const F=FB;try{await F.updateDoc(F.doc(F.db,'pairs',pid),{members:F.arrayUnion(FBST.user.uid)});localStorage.removeItem('gymcoach_pjoin');D.fpair=pid;save();setPair({fb:pid});fbStart();toast(Vi('🤝 Đã kết nối!','🤝 Paired!'))}catch(e){toast(Vi('Mã không hợp lệ hoặc đã đủ 2 người','Invalid code or the pair is full'),5000)}}
+async function fbPairLeave(){const F=FB,pid=D.fpair;if(pid&&F&&FBST.user)try{await F.updateDoc(F.doc(F.db,'pairs',pid),{members:F.arrayRemove(FBST.user.uid)})}catch(e){}fbPairGone();fbStart()}
+async function fbNudge(m){const F=FB;try{await F.addDoc(F.collection(F.db,'pairs',D.fpair,'nudges'),{from:FBST.user.uid,m,at:Date.now()});return true}catch(e){return false}}
+async function fbLogout(){if(!confirm(Vi('Đăng xuất? Dữ liệu vẫn còn trên máy này.','Sign out? Your data stays on this device.')))return;await fbFlush();fbStop();await FB.signOut(FB.auth);localStorage.removeItem('gymcoach_fbon');const p=pair();if(p&&p.fb)setPair(null);toast(Vi('Đã đăng xuất','Signed out'))}
+async function fbDeleteCloud(){if(!confirm(Vi('Xoá TOÀN BỘ dữ liệu của bạn trên đám mây? Dữ liệu trên máy này vẫn giữ nguyên. Không thể hoàn tác.','Delete ALL your cloud data? Data on this device is kept. This cannot be undone.')))return;
+ const F=FB,uid=FBST.user.uid;try{if(D.fpair)await fbPairLeave();fbStop(true);const s=await F.getDocs(F.collection(F.db,'users',uid,'u'));for(let i=0;i<s.docs.length;i+=400){const b=F.writeBatch(F.db);s.docs.slice(i,i+400).forEach(d=>b.delete(d.ref));await b.commit()}
+  await F.deleteDoc(F.doc(F.db,'users',uid,'public','summary')).catch(()=>{});SM={};saveSM();fbStop();await F.signOut(F.auth);localStorage.removeItem('gymcoach_fbon');toast(Vi('🗑️ Đã xoá dữ liệu trên mây và đăng xuất','🗑️ Cloud data deleted, signed out'),5000)}catch(e){toast(Vi('Lỗi khi xoá: ','Delete failed: ')+esc(e.code||''));fbStart()}}
+function acctCard(){const u=FBST.user,st=FBST.state,t=FBST.last?new Date(FBST.last):null,tt=t?(t.toDateString()===new Date().toDateString()?'':FD(ld(t))+' ')+z(t.getHours())+':'+z(t.getMinutes()):'';
+ const stx=!navigator.onLine?`🟠 ${Vi('Đang offline. Thay đổi sẽ lên mây khi có mạng.','Offline. Changes will sync when you are back online.')}`:st==='sync'?`🔄 ${Vi('Đang đồng bộ…','Syncing…')}`:st==='err'?`🔴 ${Vi('Lỗi đồng bộ','Sync error')} (${esc(FBST.err||'')})`:t?`🟢 ${Vi('Đã lưu lên mây lúc','Saved to cloud at')} ${tt}`:`⏳ ${Vi('Chuẩn bị đồng bộ…','Preparing sync…')}`;
+ if(!u)return `<div class="card acc"><h2>☁️ ${Vi('Sao lưu đám mây','Cloud backup')}</h2><p class="mut" style="margin:0 0 12px">${Vi('Không bắt buộc. Đăng nhập để tự động lưu nhật ký, cân nặng, số đo và cài đặt lên mây, đổi máy là có lại hết. Không đăng nhập vẫn dùng đầy đủ, kể cả offline.','Optional. Sign in to back up logs, weights, measurements and settings automatically, and get everything back on a new phone. Everything still works without signing in, even offline.')}</p>
+ <button class="gbtn" onclick="fbLogin()" ${st==='busy'?'disabled':''}><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>${st==='busy'?Vi('Đang mở Google…','Opening Google…'):Vi('Đăng nhập với Google','Sign in with Google')}</button>
+ <div class="mut" style="font-size:12px;margin-top:10px">🔒 ${Vi('Ảnh tiến độ và Gemini key luôn chỉ ở trên máy này, không bao giờ tải lên.','Progress photos and your Gemini key always stay on this device, never uploaded.')}</div></div>`;
+ return `<div class="card acc"><div class="row" style="gap:12px">${u.photoURL?`<img src="${esc(u.photoURL)}" class="av" alt="" referrerpolicy="no-referrer">`:`<div class="av">${esc((u.displayName||'?')[0])}</div>`}<div style="min-width:0;flex:1"><b>${esc(u.displayName||'')}</b><div class="mut" style="font-size:13px;overflow:hidden;text-overflow:ellipsis">${esc(u.email||'')}</div></div></div>
+ <div class="sst">${stx}</div><button class="btn g" style="margin-top:12px" onclick="fbSync();toast('🔄 '+Vi('Đang đồng bộ','Syncing'))">🔄 ${Vi('Đồng bộ ngay','Sync now')}</button>
+ <div class="mut" style="font-size:12px;margin-top:10px">📷 ${Vi('Ảnh tiến độ chỉ lưu trên máy (lưu ảnh lên mây cần gói trả phí). Dùng "Xuất file" bên dưới để sao lưu ảnh.','Progress photos stay on this device (cloud photo storage needs a paid plan). Use "Export" below to back them up.')} 🔑 ${Vi('Gemini key không bao giờ được đồng bộ.','Your Gemini key is never synced.')}</div>
+ <div class="duo" style="margin-top:12px"><button class="btn g" onclick="fbLogout()">${Vi('Đăng xuất','Sign out')}</button><button class="btn g" style="color:var(--bad)" onclick="fbDeleteCloud()">${Vi('Xoá dữ liệu mây','Delete cloud data')}</button></div></div>`}
+/* hooks */
+const _rawSave=()=>localStorage.setItem(K,JSON.stringify(D));
+const _sv13=save;save=function(){_sv13();if(FBST.user){const ch=stampUnits(toUnits(D,localStorage),SM,Date.now(),false);if(ch.length){saveSM();fbPush(ch)}fbPub()}};
+const _pSend=pSend;pSend=function(kind,extra){const p=pair();if(p&&p.fb){if(kind==='s')fbPub();else if(kind==='n')return fbNudge(extra.m);return}return _pSend(kind,extra)};
+const _pLive=pLive;pLive=function(){const p=pair();if(p&&p.fb)return;_pLive()};const _pPoll=pPoll;pPoll=function(){const p=pair();if(p&&p.fb)return;return _pPoll()};
+const _pc=pairCreate;pairCreate=function(){if(FBST.user)return fbPairCreate().then(()=>renderSet());_pc()};
+const _pl=pairLink;pairLink=function(p){return p&&p.fb?location.href.split('#')[0].split('?')[0]+'#fbpair='+p.fb:_pl(p)};
+const _po=pairOff;pairOff=function(){const p=pair();if(p&&p.fb){if(confirm(Vi('Ngắt kết nối với bạn đồng hành?','Unpair?')))fbPairLeave().then(()=>{renderSet();renderHome()});return}_po()};
+const _rs3=renderSet;renderSet=function(){_rs3();const c=$('#t-set').querySelector('.card');c&&c.insertAdjacentHTML('afterend',acctCard());const pc=[...$('#t-set').querySelectorAll('.card h2')].find(h=>/🤝/.test(h.textContent));const p=pair();if(pc)pc.parentElement.insertAdjacentHTML('beforeend',`<div class="mut" style="font-size:12px;margin-top:8px">${p&&p.fb?'☁️ '+Vi('Đang kết nối qua tài khoản Google (Firestore).','Paired through your Google accounts (Firestore).'):FBST.user?'':'💡 '+Vi('Đăng nhập Google (cả hai người) để kết nối ổn định hơn qua đám mây.','Sign in with Google (both of you) for a sturdier cloud link.')}</div>`)};
+addEventListener('online',()=>{renderSetSafe();if(FBST.user)fbSync()});addEventListener('offline',renderSetSafe);
+if(localStorage.getItem('gymcoach_fbon')||/^#fbpair=/.test(location.hash))fbInit().catch(()=>{});
+function fbHash(){if(/^#fbpair=/.test(location.hash)){const pid=location.hash.slice(8);history.replaceState(null,'',location.pathname);const go=()=>FBST.user?fbPairJoin(pid):(localStorage.setItem('gymcoach_pjoin',pid),toast(Vi('Đăng nhập Google ở Cài đặt để kết nối với bạn đồng hành','Sign in with Google in Settings to pair'),6000));setTimeout(go,2500)}}
+fbHash();addEventListener('hashchange',fbHash);
+setInterval(()=>{const j=localStorage.getItem('gymcoach_pjoin');if(j&&FBST.user&&FBST.gotFirst)fbPairJoin(j)},4000);
+const _rsu=renderSetup;renderSetup=function(){_rsu();if(!FBST.user)$('#setup').insertAdjacentHTML('beforeend',`<div class="card" style="margin-top:14px"><b>${Vi('Đã dùng app trên máy khác?','Used the app on another phone?')}</b><p class="mut" style="margin:6px 0 12px;font-size:13px">${Vi('Đăng nhập để khôi phục toàn bộ dữ liệu từ đám mây.','Sign in to restore all your data from the cloud.')}</p><button class="gbtn" onclick="fbLogin()"><svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>${Vi('Đăng nhập với Google','Sign in with Google')}</button></div>`)};
 
 boot();if(/^#r=/.test(location.hash))openShared(location.hash.slice(3));addEventListener('hashchange',()=>{if(/^#r=/.test(location.hash))openShared(location.hash.slice(3))});if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 if(/^#ex=/.test(location.hash)&&D.s.name){const[a,b]=location.hash.slice(4).split('.');wDay=+a;renderWork();openEx(+b)}
